@@ -3,3 +3,7 @@ requests
 pandas
 underthesea
 matplotlib
+requests-html
+lxml_html_clean
+selenium
+webdriver-manager
