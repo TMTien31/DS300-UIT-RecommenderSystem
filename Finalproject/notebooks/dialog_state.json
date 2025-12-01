@@ -1,0 +1,15 @@
+{
+    "hard_constraints": {
+        "type_of_food": [],
+        "ingredients": [],
+        "cook_time": [],
+        "algeric": []
+    },
+    "soft_constraints": {
+        "num_of_people": [],
+        "calories": []
+    },
+    "recommended_items": [],
+    "accepted_items": [],
+    "rejected_items": []
+}
