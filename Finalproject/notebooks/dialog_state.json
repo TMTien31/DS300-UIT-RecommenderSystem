@@ -1,15 +1,33 @@
 {
     "hard_constraints": {
-        "type_of_food": [],
-        "ingredients": [],
-        "cook_time": [],
-        "algeric": []
+        "type_of_food": [
+            "món tết"
+        ],
+        "ingredients": [
+            "nem chua"
+        ],
+        "cook_time": [
+            "nhanh",
+            "trung bình",
+            "lâu"
+        ],
+        "algeric": [
+            "none"
+        ]
     },
     "soft_constraints": {
-        "num_of_people": [],
-        "calories": []
+        "num_of_people": [
+            "none"
+        ],
+        "calories": [
+            "none"
+        ]
     },
-    "recommended_items": [],
-    "accepted_items": [],
+    "recommended_items": [
+        "Cách làm gỏi cuốn thập cẩm phiên bản 'vét tủ lạnh'"
+    ],
+    "accepted_items": [
+        "Cách làm gỏi cuốn thập cẩm phiên bản 'vét tủ lạnh'"
+    ],
     "rejected_items": []
 }

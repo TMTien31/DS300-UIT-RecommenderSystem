@@ -11,3 +11,4 @@ selenium
 webdriver-manager
 google-generativeai
 dotenv 
+sentence_transformers
