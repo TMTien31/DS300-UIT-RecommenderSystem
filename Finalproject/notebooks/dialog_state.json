@@ -1,14 +1,12 @@
 {
     "hard_constraints": {
         "type_of_food": [
-            "món tết"
+            "món chính"
         ],
         "ingredients": [
-            "nem chua"
+            "thịt kho"
         ],
         "cook_time": [
-            "nhanh",
-            "trung bình",
             "lâu"
         ],
         "algeric": [
@@ -23,11 +21,7 @@
             "none"
         ]
     },
-    "recommended_items": [
-        "Cách làm gỏi cuốn thập cẩm phiên bản 'vét tủ lạnh'"
-    ],
-    "accepted_items": [
-        "Cách làm gỏi cuốn thập cẩm phiên bản 'vét tủ lạnh'"
-    ],
+    "recommended_items": [],
+    "accepted_items": [],
     "rejected_items": []
 }
