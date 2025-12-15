@@ -12,3 +12,5 @@ webdriver-manager
 google-generativeai
 dotenv 
 sentence_transformers
+underthesea
+faiss-cpu
