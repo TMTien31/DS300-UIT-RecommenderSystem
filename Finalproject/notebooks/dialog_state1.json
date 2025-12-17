@@ -1,0 +1,27 @@
+{
+    "hard_constraints": {
+        "type_of_food": [
+            "món chính"
+        ],
+        "ingredients": [
+            "thịt kho"
+        ]
+    },
+    "soft_constraints": {
+        "cook_time": [
+            "trung bình"
+        ],
+        "num_of_people": [
+            "4"
+        ],
+        "calories": [
+            "none"
+        ],
+        "algeric": [
+            "none"
+        ]
+    },
+    "recommended_items": [],
+    "accepted_items": [],
+    "rejected_items": []
+}
