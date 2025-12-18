@@ -1,10 +1,10 @@
 {
     "hard_constraints": {
         "type_of_food": [
-            "món chính"
+            "món kho"
         ],
         "ingredients": [
-            "thịt kho"
+            "thịt heo"
         ]
     },
     "soft_constraints": {
