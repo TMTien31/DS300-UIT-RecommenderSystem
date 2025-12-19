@@ -9,7 +9,7 @@
     },
     "soft_constraints": {
         "cook_time": [
-            "trung bình"
+            "45"
         ],
         "num_of_people": [
             "4"
