@@ -1,32 +1,28 @@
 {
     "hard_constraints": {
         "type_of_food": [
-            "món kho"
+            "món nướng"
         ],
         "ingredients": [
-            "gà",
-            "sả",
-            "ớt"
+            "bò",
+            "nấm mỡ",
+            "bột mì"
         ]
     },
     "soft_constraints": {
-        "cook_time": [
-            "none"
-        ],
-        "num_of_people": [
-            "none"
-        ],
+        "cook_time": [],
+        "num_of_people": [],
         "calories": [],
         "algeric": [
             "none"
         ]
     },
     "recommended_items": [
-        "Thịt gà kho gừng",
-        "Cá quả kho tương",
-        "Mách bạn cách làm gà kho thơm mềm ngon, ngọt thịt đơn giản với nồi lẩu điện",
-        "Gà kho tiêu thơm ngon, đậm đà đơn giản tại nhà",
-        "Cá ngừ kho nước dừa thơm ngon, đậm vị, bắt cơm"
+        "Món nấm đùi gà sốt chua ngọt, sa tế và mè ngon, cực hao cơm",
+        "Nấm đùi gà xào hành tây đậm đà hương vị cho bữa cơm chay",
+        "Nấm lộc nhung nấu mì tôm thơm giòn sần sật bằng nồi lẩu điện",
+        "Nấm đùi gà kho xì dầu thơm ngon đậm đà đơn giản tại nhà",
+        "Nấm nướng giấy bạc chay bằng nồi chiên không dầu thơm ngon"
     ],
     "accepted_items": [],
     "rejected_items": []

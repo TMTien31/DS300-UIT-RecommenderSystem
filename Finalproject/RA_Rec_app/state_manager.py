@@ -30,9 +30,11 @@ class StateManager:
             json.dump(state, f, indent=4, ensure_ascii=False)
     
     def reset_state(self) -> Dict[str, Any]:
-        """Reset state to default and clear buffer"""
+        """Reset state by deleting state file and clearing buffer"""
         self.recipes_buffer = []
-        self.save_state(DEFAULT_STATE)
+        # Delete the state file completely
+        if self.state_file.exists():
+            self.state_file.unlink()
         return DEFAULT_STATE.copy()
     
     def add_recipes_to_buffer(self, recipes_data: List[Dict[str, Any]]) -> None:
@@ -67,18 +69,17 @@ class StateManager:
     
     def is_info_complete(self, state: Dict[str, Any]) -> bool:
         """Check if all required information is collected"""
-        # Check hard constraints
+        # Check hard constraints - all must be filled
         for key in state["hard_constraints"]:
             if len(state["hard_constraints"][key]) == 0:
                 return False
         
-        # Check if at least one soft constraint is filled
-        all_soft_empty = all(
-            len(state["soft_constraints"][key]) == 0 
-            for key in state["soft_constraints"]
-        )
+        # Check soft constraints - all must be filled
+        for key in state["soft_constraints"]:
+            if len(state["soft_constraints"][key]) == 0:
+                return False
         
-        return not all_soft_empty
+        return True
     
     def get_missing_field(self, state: Dict[str, Any]) -> str:
         """Get the next missing field to ask about"""

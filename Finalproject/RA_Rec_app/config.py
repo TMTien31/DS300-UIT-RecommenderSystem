@@ -33,7 +33,7 @@ TOP_K_DISPLAY = 5
 DEFAULT_STATE = {
     "hard_constraints": {
         "type_of_food": [],
-        "ingredients": [],
+        "ingredients": []
     },
     "soft_constraints": {
         "cook_time": [],
