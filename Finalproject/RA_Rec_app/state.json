@@ -1,0 +1,33 @@
+{
+    "hard_constraints": {
+        "type_of_food": [
+            "món kho"
+        ],
+        "ingredients": [
+            "gà",
+            "sả",
+            "ớt"
+        ]
+    },
+    "soft_constraints": {
+        "cook_time": [
+            "none"
+        ],
+        "num_of_people": [
+            "none"
+        ],
+        "calories": [],
+        "algeric": [
+            "none"
+        ]
+    },
+    "recommended_items": [
+        "Thịt gà kho gừng",
+        "Cá quả kho tương",
+        "Mách bạn cách làm gà kho thơm mềm ngon, ngọt thịt đơn giản với nồi lẩu điện",
+        "Gà kho tiêu thơm ngon, đậm đà đơn giản tại nhà",
+        "Cá ngừ kho nước dừa thơm ngon, đậm vị, bắt cơm"
+    ],
+    "accepted_items": [],
+    "rejected_items": []
+}
