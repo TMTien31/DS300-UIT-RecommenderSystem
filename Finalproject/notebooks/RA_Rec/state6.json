@@ -1,0 +1,21 @@
+{
+    "hard_constraints": {
+        "type_of_food": [],
+        "ingredients": []
+    },
+    "soft_constraints": {
+        "cook_time": [],
+        "num_of_people": [],
+        "calories": [],
+        "algeric": []
+    },
+    "recommended_items": [
+        "Cơm chiên cá mặn ngon tại nhà",
+        "Cơm chiên dương châu chay vẫn ngon miệng",
+        "Mì xào pate thơm ngon lạ miệng beo béo hấp dẫn",
+        "Cơm chiên cua",
+        "Cơm rang Jambon tiện lợi"
+    ],
+    "accepted_items": [],
+    "rejected_items": []
+}

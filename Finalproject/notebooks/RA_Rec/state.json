@@ -1,18 +1,18 @@
 {
     "hard_constraints": {
         "type_of_food": [
-            "món kho"
+            "sinh tố"
         ],
         "ingredients": [
-            "thịt heo"
+            "rau má"
         ]
     },
     "soft_constraints": {
         "cook_time": [
-            "45"
+            "none"
         ],
         "num_of_people": [
-            "4"
+            "none"
         ],
         "calories": [
             "none"
