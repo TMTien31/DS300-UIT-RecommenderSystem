@@ -1,7 +1,7 @@
 {
     "hard_constraints": {
-        "type_of_food": [],
-        "ingredients": []
+        "type_of_food": ["món kho"],
+        "ingredients": ["sườn non"]
     },
     "soft_constraints": {
         "cook_time": [],
