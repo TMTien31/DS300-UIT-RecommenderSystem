@@ -74,24 +74,20 @@ class StateManager:
             if len(state["hard_constraints"][key]) == 0:
                 return False
         
-        # Check soft constraints - all must be filled
-        for key in state["soft_constraints"]:
-            if len(state["soft_constraints"][key]) == 0:
-                return False
+        # Soft constraints are optional - no need to check
+        # They will be updated by LLM when user mentions them
         
         return True
     
     def get_missing_field(self, state: Dict[str, Any]) -> str:
         """Get the next missing field to ask about"""
-        # Check hard constraints first
+        # Check hard constraints only
         for key in state["hard_constraints"]:
             if len(state["hard_constraints"][key]) == 0:
                 return key
         
-        # Then check soft constraints
-        for key in state["soft_constraints"]:
-            if len(state["soft_constraints"][key]) == 0:
-                return key
+        # Soft constraints are optional - don't ask for them
+        # They will be updated by LLM when user mentions them
         
         return None
 
