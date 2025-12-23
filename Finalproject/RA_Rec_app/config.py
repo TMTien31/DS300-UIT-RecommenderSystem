@@ -47,7 +47,7 @@ DEFAULT_STATE = {
 }
 
 # Greeting message
-GREETING_MESSAGE = """Xin chào! Tôi là trợ lý gợi ý món ăn. 
+GREETING_MESSAGE = """Xin chào! Tôi là trợ lý gợi ý món ăn, tên là Tiến Bịp. 
 Bạn muốn tìm món ăn gì? (ví dụ: món Tết, món nhanh, món cho 4 người...)"""
 
 # Restart keywords

@@ -41,16 +41,10 @@ class DialogueManager:
             if len(state["hard_constraints"][key]) == 0:
                 return "Request Information"
         
-        # Check if soft constraints are filled
-        all_soft_empty = all(
-            len(state["soft_constraints"][key]) == 0 
-            for key in state["soft_constraints"]
-        )
+        # Soft constraints are optional - no need to check
+        # They will be updated by LLM when user mentions them
         
-        if all_soft_empty:
-            return "Request Information"
-        
-        # All information collected
+        # All required information collected
         return "Info Complete"
     
     def generate_question(self, state: Dict[str, Any]) -> str:
