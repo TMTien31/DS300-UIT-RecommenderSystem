@@ -225,8 +225,12 @@ Finalproject/notebooks/food_mapping.pkl
 Finalproject/notebooks/food_tfidf.index
 Finalproject/notebooks/food_embeddings.npy
 Finalproject/notebooks/food_sbert.index
+
 Finalproject/noupload
 Finalproject/notebooks/RA_Rec/recipes_embeddings_list.pkl
+Finalproject/notebooks/Saved_models/
+
+Finalproject/notebooks/recommend_and_evaluation/evaluation_jsonl/
 
 Finalproject/RA_Rec_app/rarec_app_venv
 Finalproject/RA_Rec_app/state.json
