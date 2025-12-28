@@ -1,6 +1,6 @@
 """
-FastAPI Backend for RA-Rec Chatbot
-Provides REST API endpoints for the conversational recommender system
+FastAPI Backend for Conversational Recipe Recommender System
+Provides REST API endpoints for both search and conversational modes
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,13 +12,14 @@ from data_loader import get_data_loader
 from state_manager import get_state_manager
 from llm_handler import get_llm_handler
 from recommender import get_recommender
+from search_recommender import get_search_recommender, SearchRecommender
 from config import GREETING_MESSAGE, RESTART_KEYWORDS, TOP_K_DISPLAY
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="RA-Rec Chatbot API",
-    description="Conversational Food Recommender System API",
-    version="1.0.0"
+    title="Conversational Recipe Recommender API",
+    description="Recipe recommendation with Search and Chat modes",
+    version="2.0.0"
 )
 
 # Add CORS middleware
@@ -34,6 +35,7 @@ app.add_middleware(
 state_manager = None
 llm_handler = None
 recommender = None
+search_recommender = None
 
 
 # Pydantic models
@@ -46,12 +48,24 @@ class ChatResponse(BaseModel):
     state: Dict[str, Any]
 
 
+class SearchRequest(BaseModel):
+    algorithm: str
+    query: str
+    top_k: int = 10
+
+
+class SearchResponse(BaseModel):
+    results: List[Dict[str, Any]]
+    algorithm: str
+    query: str
+
+
 @app.on_event("startup")
 async def startup_event():
     """Load models and data on startup"""
-    global state_manager, llm_handler, recommender
+    global state_manager, llm_handler, recommender, search_recommender
     
-    print("Starting RA-Rec Chatbot API...")
+    print("Starting Conversational Recipe Recommender API...")
     
     # Initialize components
     data_loader = get_data_loader()
@@ -73,16 +87,26 @@ async def startup_event():
     llm_handler = get_llm_handler()
     recommender = get_recommender(model, embeddings_list, recipes_df)
     
+    # Initialize search recommender
+    search_recommender = get_search_recommender(recipes_df)
+    
     print("\nAPI is ready!")
+    print(f"Available algorithms: {SearchRecommender.ALGORITHMS}")
 
 
 @app.get("/")
 async def root():
     """Root endpoint"""
     return {
-        "message": "RA-Rec Chatbot API",
-        "version": "1.0.0",
+        "message": "Conversational Recipe Recommender API",
+        "version": "2.0.0",
+        "modes": {
+            "search": "Algorithm-based recipe search",
+            "chat": "Conversational recommendation"
+        },
         "endpoints": {
+            "/search": "POST - Search recipes with algorithm",
+            "/algorithms": "GET - List available algorithms",
             "/chat": "POST - Send chat message",
             "/reset": "POST - Reset conversation",
             "/state": "GET - Get current state",
@@ -98,8 +122,57 @@ async def health_check():
         "status": "healthy",
         "state_manager": state_manager is not None,
         "llm_handler": llm_handler is not None,
-        "recommender": recommender is not None
+        "recommender": recommender is not None,
+        "search_recommender": search_recommender is not None
     }
+
+
+@app.get("/algorithms")
+async def get_algorithms():
+    """Get list of available search algorithms"""
+    return {
+        "algorithms": SearchRecommender.ALGORITHMS,
+        "count": len(SearchRecommender.ALGORITHMS)
+    }
+
+
+@app.post("/search", response_model=SearchResponse)
+async def search_recipes(request: SearchRequest):
+    """
+    Search recipes using selected algorithm
+    
+    Args:
+        algorithm: Algorithm name
+        query: Search query
+        top_k: Number of results (default 10)
+    """
+    if request.algorithm not in SearchRecommender.ALGORITHMS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid algorithm. Choose from: {SearchRecommender.ALGORITHMS}"
+        )
+    
+    if not request.query.strip():
+        raise HTTPException(status_code=400, detail="Query cannot be empty")
+    
+    try:
+        # Load algorithm
+        search_recommender.load_algorithm(request.algorithm)
+        
+        # Search
+        results = search_recommender.search(request.query, request.top_k)
+        
+        # Clean up
+        search_recommender.cleanup()
+        
+        return SearchResponse(
+            results=results,
+            algorithm=request.algorithm,
+            query=request.query
+        )
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Search error: {str(e)}")
 
 
 @app.post("/chat", response_model=ChatResponse)

@@ -221,15 +221,12 @@ LAB/LAB3/movies
 LAB/LAB4/movies
 LAB/LAB4/movies_lab3
 
-Finalproject/notebooks/food_mapping.pkl
-Finalproject/notebooks/food_tfidf.index
-Finalproject/notebooks/food_embeddings.npy
-Finalproject/notebooks/food_sbert.index
 
 Finalproject/noupload
 Finalproject/notebooks/RA_Rec/recipes_embeddings_list.pkl
 Finalproject/notebooks/Saved_models/
 Finalproject/notebooks/recommend_and_evaluation/1_Build_eval_dataset.ipynb
+Finalproject/Demo_app/check_requirements.py
 
-Finalproject/Demo_app/rarec_app_venv
+Finalproject/Demo_app/demo_venv
 Finalproject/Demo_app/state.json
