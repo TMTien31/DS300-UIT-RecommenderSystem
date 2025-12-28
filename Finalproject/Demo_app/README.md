@@ -23,6 +23,11 @@ Thêm Google API key vào `.env`:
 GOOGLE_API_KEY=your_key_here
 ```
 
+Tải model xuống:
+Link drive: https://drive.google.com/drive/folders/1WNkUjkH3JJWx1xfEcgKcnx32QAn3aVkj?usp=drive_link
+
+Lưu ý: tải toàn bộ folder Saved_models, giải nén và bỏ vào folder notebooks (notebooks/Saved_models)
+
 ## Sử dụng
 
 **Terminal 1 - Backend:**
