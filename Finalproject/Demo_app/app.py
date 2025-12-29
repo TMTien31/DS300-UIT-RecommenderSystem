@@ -241,8 +241,6 @@ if "Search" in mode:
 
 # ==================== CHAT MODE ====================
 else:
-    st.header("Trò chuyện với trợ lý")
-    
     init_chat()
     
     # Reset button in chat mode

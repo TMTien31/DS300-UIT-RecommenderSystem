@@ -17,7 +17,7 @@ NOTEBOOKS_DIR = BASE_DIR.parent / "notebooks" / "RA_Rec"
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # Model configurations
-MODEL_NAME = "models/gemini-2.5-flash-lite"
+MODEL_NAME = "models/gemini-2.5-flash"
 SBERT_MODEL = "keepitreal/vietnamese-sbert"
 
 # File paths
