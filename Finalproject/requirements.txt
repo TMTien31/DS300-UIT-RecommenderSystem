@@ -14,3 +14,4 @@ dotenv
 sentence_transformers
 underthesea
 faiss-cpu
+wordcloud
