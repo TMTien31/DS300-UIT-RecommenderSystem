@@ -25,10 +25,10 @@ GOOGLE_API_KEY=your_key_here
 
 3. Tải model xuống:
 6 model cơ bản: Link GG Drive: https://drive.google.com/drive/folders/1WNkUjkH3JJWx1xfEcgKcnx32QAn3aVkj?usp=drive_link
-Lưu ý: tải toàn bộ folder Saved_models, giải nén và bỏ vào folder notebooks (notebooks/Saved_models)
+Lưu ý: tải toàn bộ folder Saved_models (vì các model nặng nên có thể cần tải và giải nén từng folder riêng), giải nén và bỏ vào folder Finalproject\notebooks\Saved_models\...
 
 Model RA-REC: https://drive.google.com/file/d/1KPPWXGv52jamRULpjw2EFVYMdx24IG2x/view?usp=drive_link
-Lưu ý: model RA-Rec được đặt vào thư mục notebooks/RA_Rec
+Lưu ý: model RA-Rec được đặt vào thư mục Finalproject\notebooks\RA_Rec\recipes_embeddings_list.pkl
 
 ## Sử dụng
 
