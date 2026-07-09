@@ -81,6 +81,7 @@ target/
 # IPython
 profile_default/
 ipython_config.py
+.codex_tmp/
 
 # pyenv
 #   For a library or package, you might want to ignore these files since the code is
@@ -232,3 +233,5 @@ Finalproject/Demo_app/demo_venv
 Finalproject/Demo_app/state.json
 
 LAB
+Finalproject/review/
+.codex_tmp/
