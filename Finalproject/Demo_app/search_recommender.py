@@ -6,10 +6,13 @@ import pandas as pd
 import numpy as np
 import pickle
 import gc
+from pathlib import Path
 from typing import List, Dict, Any, Tuple
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
 import json
+
+from config import SAVED_MODELS_DIR
 
 
 class SearchRecommender:
@@ -26,7 +29,7 @@ class SearchRecommender:
         "RA-Rec (Late Fusion)"
     ]
     
-    def __init__(self, df: pd.DataFrame, base_path: str = "../notebooks/Saved_models"):
+    def __init__(self, df: pd.DataFrame, base_path: str | Path = SAVED_MODELS_DIR):
         """
         Initialize search recommender
         
@@ -35,7 +38,7 @@ class SearchRecommender:
             base_path: Path to saved models directory
         """
         self.df = df
-        self.base_path = base_path
+        self.base_path = Path(base_path).resolve()
         self.current_algorithm = None
         self.current_model = None
         
@@ -69,12 +72,12 @@ class SearchRecommender:
     
     def _load_tfidf(self):
         """Load TF-IDF model"""
-        path = f"{self.base_path}/TFIDF/"
+        path = self.base_path / "TFIDF"
         
-        with open(path + 'tfidf_vectorizer.pkl', 'rb') as f:
+        with (path / "tfidf_vectorizer.pkl").open("rb") as f:
             vectorizer = pickle.load(f)
         
-        similarity_matrix = np.load(path + 'tfidf_similarity.npy')
+        similarity_matrix = np.load(path / "tfidf_similarity.npy")
         
         self.current_model = {
             'type': 'similarity_matrix',
@@ -91,12 +94,12 @@ class SearchRecommender:
     
     def _load_ingredient_tfidf(self):
         """Load Ingredient TF-IDF model"""
-        path = f"{self.base_path}/Ingredient_TFIDF/"
+        path = self.base_path / "Ingredient_TFIDF"
         
-        with open(path + 'ingredient_tfidf_vectorizer.pkl', 'rb') as f:
+        with (path / "ingredient_tfidf_vectorizer.pkl").open("rb") as f:
             vectorizer = pickle.load(f)
         
-        similarity_matrix = np.load(path + 'ingredient_tfidf_similarity.npy')
+        similarity_matrix = np.load(path / "ingredient_tfidf_similarity.npy")
         
         self.current_model = {
             'type': 'similarity_matrix',
@@ -106,13 +109,13 @@ class SearchRecommender:
     
     def _load_sbert(self):
         """Load SBERT + FAISS model"""
-        path = f"{self.base_path}/SBERT_FAISS/"
+        path = self.base_path / "SBERT_FAISS"
         
-        with open(path + 'model_info.json', 'r', encoding='utf-8') as f:
+        with (path / "model_info.json").open("r", encoding="utf-8") as f:
             info = json.load(f)
         
         model = SentenceTransformer(info['model_name'])
-        embeddings = np.load(path + 'recipe_embeddings.npy')
+        embeddings = np.load(path / "recipe_embeddings.npy")
         similarity_matrix = cosine_similarity(embeddings, embeddings)
         
         self.current_model = {
@@ -124,18 +127,18 @@ class SearchRecommender:
     
     def _load_hybrid_tfidf_sbert(self):
         """Load Hybrid TF-IDF + SBERT model"""
-        hybrid_path = f"{self.base_path}/Hybrid_TFIDF_SBERT/"
+        hybrid_path = self.base_path / "Hybrid_TFIDF_SBERT"
         
-        with open(hybrid_path + 'config.json', 'r', encoding='utf-8') as f:
+        with (hybrid_path / "config.json").open("r", encoding="utf-8") as f:
             config = json.load(f)
         
         alpha = config['alpha']
         
         # Load TF-IDF similarity
-        tfidf_sim = np.load(f"{self.base_path}/TFIDF/tfidf_similarity.npy")
+        tfidf_sim = np.load(self.base_path / "TFIDF" / "tfidf_similarity.npy")
         
         # Load SBERT embeddings and compute similarity
-        sbert_embeddings = np.load(hybrid_path + 'sbert_embeddings.npy')
+        sbert_embeddings = np.load(hybrid_path / "sbert_embeddings.npy")
         sbert_sim = cosine_similarity(sbert_embeddings, sbert_embeddings)
         
         # Combine
@@ -149,8 +152,8 @@ class SearchRecommender:
     
     def _load_hybrid_general(self):
         """Load Hybrid General model"""
-        path = f"{self.base_path}/Hybrid/"
-        similarity_matrix = np.load(path + 'hybrid_similarity.npy')
+        path = self.base_path / "Hybrid"
+        similarity_matrix = np.load(path / "hybrid_similarity.npy")
         
         self.current_model = {
             'type': 'similarity_matrix',
@@ -159,11 +162,13 @@ class SearchRecommender:
     
     def _load_rarec(self):
         """Load RA-Rec Late Fusion model"""
-        rarec_path = f"{self.base_path}/../RA_Rec/"
+        rarec_path = self.base_path / "RA_Rec"
+        if not rarec_path.exists():
+            rarec_path = self.base_path.parent / "RA_Rec"
         
         model = SentenceTransformer('keepitreal/vietnamese-sbert')
         
-        with open(rarec_path + 'recipes_embeddings_list.pkl', 'rb') as f:
+        with (rarec_path / "recipes_embeddings_list.pkl").open("rb") as f:
             embeddings_list = pickle.load(f)
         
         self.current_model = {
@@ -348,7 +353,7 @@ class SearchRecommender:
 _search_recommender = None
 
 
-def get_search_recommender(df: pd.DataFrame = None, base_path: str = "../notebooks/Saved_models"):
+def get_search_recommender(df: pd.DataFrame = None, base_path: str | Path = SAVED_MODELS_DIR):
     """Get or create SearchRecommender instance"""
     global _search_recommender
     

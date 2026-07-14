@@ -6,6 +6,8 @@ import streamlit as st
 import requests
 import pandas as pd
 
+from config import API_REQUEST_TIMEOUT_SECONDS
+
 # Configuration
 API_URL = "http://localhost:8000"
 
@@ -19,9 +21,26 @@ def call_api(endpoint, data=None):
     """Call API"""
     try:
         url = f"{API_URL}/{endpoint}"
-        response = requests.post(url, json=data) if data else requests.get(url)
+        if data:
+            response = requests.post(url, json=data, timeout=API_REQUEST_TIMEOUT_SECONDS)
+        else:
+            response = requests.get(url, timeout=API_REQUEST_TIMEOUT_SECONDS)
         response.raise_for_status()
         return response.json()
+    except requests.exceptions.Timeout:
+        st.error(
+            f"API timeout after {API_REQUEST_TIMEOUT_SECONDS:.0f}s. "
+            "Backend or LLM endpoint may be slow/unreachable."
+        )
+        return None
+    except requests.exceptions.HTTPError as e:
+        detail = ""
+        try:
+            detail = response.json().get("detail", "")
+        except Exception:
+            detail = response.text
+        st.error(f"Lỗi API: {e}. {detail}")
+        return None
     except Exception as e:
         st.error(f"Lỗi API: {e}")
         return None
@@ -231,9 +250,9 @@ if "Search" in mode:
             
             **4. SBERT + FAISS:** Semantic embeddings sử dụng Vietnamese sentence transformers
             
-            **5. Hybrid TF-IDF + SBERT:** Kết hợp weighted (50% TF-IDF + 50% SBERT)
+            **5. Hybrid TF-IDF + SBERT:** Kết hợp 50% TF-IDF và 50% SBERT
             
-            **6. Hybrid General:** Kết hợp text TF-IDF và ingredient TF-IDF
+            **6. Hybrid Content:** Kết hợp 40% text TF-IDF và 60% Ingredient TF-IDF
             
             **7. RA-Rec (Late Fusion):** Sentence-level embeddings với average similarity
             """)

@@ -13,7 +13,7 @@ from state_manager import get_state_manager
 from llm_handler import get_llm_handler
 from recommender import get_recommender
 from search_recommender import get_search_recommender, SearchRecommender
-from config import GREETING_MESSAGE, RESTART_KEYWORDS, TOP_K_DISPLAY
+from config import EMBEDDINGS_FILE, GREETING_MESSAGE, RECIPES_CSV, RESTART_KEYWORDS, TOP_K_DISPLAY
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -74,8 +74,8 @@ async def startup_event():
     if not data_loader.is_data_available():
         print("ERROR: Required data files not found!")
         print("Please ensure the following files exist:")
-        print(f"  - {data_loader.RECIPES_CSV}")
-        print(f"  - {data_loader.EMBEDDINGS_FILE}")
+        print(f"  - {RECIPES_CSV}")
+        print(f"  - {EMBEDDINGS_FILE}")
         raise RuntimeError("Required data files not found")
     
     # Load data and models
@@ -199,7 +199,10 @@ async def chat(request: ChatRequest):
     state = state_manager.load_state()
     
     # Classify intent
+    print(f"[chat] user_message={user_message!r}")
+    print("[chat] classifying intent...")
     intents = llm_handler.classify_intent(user_message)
+    print(f"[chat] intents={intents}")
     
     # Special handling for info-gathering phase
     asking_hard = any(
@@ -218,6 +221,7 @@ async def chat(request: ChatRequest):
                 intents.append("Provide Preference")
     
     # Update state
+    print("[chat] updating dialogue state...")
     state = llm_handler.update_state(user_message, intents, state)
     state_manager.save_state(state)
     
@@ -227,6 +231,7 @@ async def chat(request: ChatRequest):
     # Handle different phases
     if "Inquire" in intents:
         # Answer question phase
+        print("[chat] answering inquiry...")
         recipes_context = state_manager.get_recipes_buffer_text()
         answer = llm_handler.answer_question(user_message, recipes_context, state)
         
@@ -237,6 +242,7 @@ async def chat(request: ChatRequest):
     
     elif info_complete:
         # Recommendation phase
+        print("[chat] generating recommendations...")
         query = recommender.generate_query_from_state(state)
         results = recommender.search_recipes(query)
         
@@ -257,6 +263,7 @@ async def chat(request: ChatRequest):
     
     else:
         # Info gathering phase
+        print("[chat] asking next missing-field question...")
         missing_field = state_manager.get_missing_field(state)
         
         questions = {

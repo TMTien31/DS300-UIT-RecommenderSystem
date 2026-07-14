@@ -68,14 +68,15 @@ Notebooks phân tích và thử nghiệm:
 - **recommend_and_evaluation/**: Notebooks đánh giá hệ thống
 - **Saved_models/**: Models đã train và lưu lại
 
-### noupload/
+#### rec_and_eval/
 
-Thư mục chứa các notebooks phát triển chính:
+Pipeline xây dựng ground truth và đánh giá retrieval:
 
-- **1_Content_Based.ipynb**: Xây dựng Content-Based Filtering
-- **2_LLM_Based.ipynb**: Thử nghiệm với LLM-based approaches
-- **3_RA_Rec.ipynb**: Reinforcement Learning approach
-- **4_Evaluation.ipynb**: Đánh giá và so sánh các phương pháp
+- **1_build_groundtruth.ipynb**: Tạo query set, sinh method runs, và pooling candidate.
+- **2_llm_label_groundtruth.ipynb**: Gán nhãn relevance 0-3 bằng LLM.
+- **4_validate_groundtruth.ipynb**: Human validation/audit cho nhãn LLM.
+- **5_manual_inspect_llm_relevance.ipynb**: Manual inspection trực quan các nhãn LLM.
+- **6_evaluate_retrieval_runs.ipynb**: Report đánh giá cuối cùng.
 
 ### LAB/
 
@@ -179,7 +180,6 @@ source DS300-venv/bin/activate
 
 4. Cài đặt dependencies:
 ```bash
-cd Finalproject
 pip install -r requirements.txt
 ```
 
@@ -192,31 +192,35 @@ jupyter notebook
 
 2. Mở và chạy các notebooks theo thứ tự trong thư mục `data/` để xử lý dữ liệu
 
-3. Chạy các notebooks trong `noupload/` để train models
+3. Chạy các notebooks trong `Finalproject/notebooks/recommend_and_evaluation/` để train models
 
 ### Chạy demo application
 
-1. Di chuyển vào thư mục Demo_app:
-```bash
-cd Finalproject/Demo_app
-```
-
-2. Cài đặt dependencies:
+1. Cài dependencies từ root repository:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Cấu hình API keys trong config.py (nếu sử dụng LLM)
-
-4. Chạy ứng dụng:
-```bash
-python app.py
+2. Cấu hình LLM bằng file `.env` ở root repository:
+```env
+LLM_BASE_URL=litellm.imt-soft
+LLM_MODEL_NAME=local-std-03
+LLM_API_KEY=your-llm-api-key
 ```
 
-hoặc với Streamlit:
+3. Chạy backend:
 ```bash
+cd Finalproject/Demo_app
+python api.py
+```
+
+4. Chạy frontend ở terminal khác:
+```bash
+cd Finalproject/Demo_app
 streamlit run app.py
 ```
+
+Backend mặc định chạy ở `http://localhost:8000`, frontend chạy ở `http://localhost:8501`.
 
 ## Demo Application
 
@@ -232,18 +236,14 @@ streamlit run app.py
 
 ### Metrics sử dụng
 
-- **Precision & Recall**: Độ chính xác của gợi ý
-- **NDCG (Normalized Discounted Cumulative Gain)**: Chất lượng ranking
-- **Coverage**: Độ phủ của items được gợi ý
-- **Diversity**: Đa dạng trong recommendations
-- **Hit Rate**: Tỷ lệ gợi ý được chấp nhận
+- **nDCG@K (Normalized Discounted Cumulative Gain)**: Metric chính cho relevance score 0-3
+- **Precision@K**: Tỷ lệ kết quả liên quan trong top-K
+- **MRR@K**: Vị trí kết quả liên quan đầu tiên
+- **MAP@K**: Chất lượng ranking với relevance nhị phân từ ngưỡng `relevance >= 1`
 
 ### So sánh các phương pháp
 
-Chi tiết trong notebook `4_Evaluation.ipynb` với:
-- Baseline comparisons
-- Ablation studies
-- User study results
+Chi tiết trong notebook `Finalproject/notebooks/rec_and_eval/6_evaluate_retrieval_runs.ipynb`.
 
 
 ---

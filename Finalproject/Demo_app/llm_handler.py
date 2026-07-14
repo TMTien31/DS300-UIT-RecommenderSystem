@@ -1,22 +1,50 @@
 """
 LLM Handler Module
-Handles all interactions with Google Gemini LLM
+Handles all interactions with an OpenAI-compatible LLM endpoint.
 """
 import json
 from typing import List, Dict, Any
-import google.generativeai as genai
-from config import MODEL_NAME, GOOGLE_API_KEY
 
-# Configure Gemini
-genai.configure(api_key=GOOGLE_API_KEY)
+from openai import OpenAI
+
+from config import (
+    LLM_API_KEY,
+    LLM_BASE_URL,
+    LLM_MAX_RETRIES,
+    LLM_MAX_TOKENS,
+    LLM_MODEL_NAME,
+    LLM_TEMPERATURE,
+    LLM_TIMEOUT_SECONDS,
+)
 
 
 class LLMHandler:
     """Handles LLM-based dialogue functions"""
     
-    def __init__(self, model_name: str = MODEL_NAME):
+    def __init__(self, model_name: str = LLM_MODEL_NAME):
         self.model_name = model_name
-        self.model = genai.GenerativeModel(model_name)
+        self.client = OpenAI(
+            api_key=LLM_API_KEY or "missing-llm-api-key",
+            base_url=LLM_BASE_URL,
+            timeout=LLM_TIMEOUT_SECONDS,
+            max_retries=LLM_MAX_RETRIES,
+        )
+        self.is_configured = bool(LLM_API_KEY)
+
+    def _generate_text(self, prompt: str) -> str:
+        """Generate text using the configured OpenAI-compatible chat endpoint."""
+        if not self.is_configured:
+            raise RuntimeError(
+                "LLM_API_KEY is not configured. Set LLM_API_KEY, LLM_BASE_URL, and LLM_MODEL_NAME in .env."
+            )
+        response = self.client.chat.completions.create(
+            model=self.model_name,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=LLM_TEMPERATURE,
+            max_tokens=LLM_MAX_TOKENS,
+        )
+        content = response.choices[0].message.content
+        return (content or "").strip()
     
     def classify_intent(self, user_utterance: str) -> List[str]:
         prompt = f"""
@@ -43,8 +71,8 @@ class LLMHandler:
                 """
         
         try:
-            resp = self.model.generate_content(prompt)
-            text = self._clean_json_response(resp.text)
+            response_text = self._generate_text(prompt)
+            text = self._clean_json_response(response_text)
             return json.loads(text)
         except Exception as e:
             print(f"[Error] parsing intent JSON: {e}")
@@ -160,8 +188,8 @@ class LLMHandler:
                   """
         
         try:
-            resp = self.model.generate_content(prompt)
-            text = self._clean_json_response(resp.text)
+            response_text = self._generate_text(prompt)
+            text = self._clean_json_response(response_text)
             new_state = json.loads(text)
             
             # Validate structure
@@ -194,8 +222,7 @@ class LLMHandler:
                 """
         
         try:
-            resp = self.model.generate_content(prompt)
-            return resp.text.strip()
+            return self._generate_text(prompt)
         except Exception as e:
             print(f"[Error] extracting dish name: {e}")
             return "NONE"
@@ -242,15 +269,14 @@ class LLMHandler:
                 """
         
         try:
-            resp = self.model.generate_content(prompt)
-            return resp.text
+            return self._generate_text(prompt)
         except Exception as e:
             print(f"[Error] answering question: {e}")
             return "Xin lỗi, tôi gặp lỗi khi trả lời câu hỏi của bạn."
     
     def present_recommendations(self, results_df, state: Dict[str, Any]) -> str:
         """
-        Present recommendations using Gemini with natural language
+        Present recommendations using the configured LLM with natural language
         
         Args:
             results_df: DataFrame with recipe search results
@@ -315,8 +341,7 @@ class LLMHandler:
                   """
         
         try:
-            resp = self.model.generate_content(prompt)
-            return resp.text, recipes_data
+            return self._generate_text(prompt), recipes_data
         except Exception as e:
             print(f"[Error] presenting recommendations: {e}")
             return "Xin lỗi, tôi gặp lỗi khi trình bày món ăn.", recipes_data
